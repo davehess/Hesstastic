@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dave Hess — Engineering Profile</title>
+<meta name="description" content="A four-component real-time platform built solo: Discord bot, Next.js web app, zero-dependency log agent, and an auto-updating Electron desktop client.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Dave Hess — Engineering Profile">
+<meta property="og:description" content="Four independently-versioned components, one monorepo, ~58k lines. Built and operated solo for a live user base.">
+<meta property="og:type" content="profile">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="site">
+  <div class="wrap">
+    <a href="/">Home</a>
+    <a href="/profile.html" class="here">Profile</a>
+    <a href="/method.html">Working method</a>
+    <a href="/business-case.html">What a seat returns</a>
+    <a href="/ws1home.html">WS1</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow rv">Engineering profile</div>
+    <h1 class="rv">Dave&nbsp;Hess</h1>
+    <p class="lede rv">
+      I build and operate <strong>a four-component real-time platform</strong> — a Discord bot, a
+      Next.js web app, a zero-dependency log-parsing agent, and an auto-updating Electron desktop
+      client — as one monorepo, solo, for a live user base that depends on it during scheduled
+      four-hour events three nights a week.
+    </p>
+    <div class="chips rv">
+      <span class="chip">Node.js</span>
+      <span class="chip">Next.js 14</span>
+      <span class="chip">Electron</span>
+      <span class="chip">PostgreSQL / Supabase</span>
+      <span class="chip">Real-time ingest</span>
+      <span class="chip">Release engineering</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">The work</h2>
+    <div class="h2sub rv">One system, four deployment targets, four independent release cadences.</div>
+    <p class="rv muted">
+      It started as a single Discord bot with a respawn timer. It is now a platform: telemetry
+      flows from software running on end-user machines, through an authenticated HTTP ingest layer,
+      into Postgres, and back out to a Discord bot, a public web app, and a set of always-on-top
+      desktop overlays that update sub-second while a user is mid-event. Every component ships on
+      its own version, to its own target, with its own rollback story.
+    </p>
+    <p class="rv muted">
+      The interesting constraint is not scale — it is that <strong style="color:var(--text)">the
+      users are all present simultaneously, on a fixed schedule, and a bad deploy is visible to
+      everyone at once.</strong> That single fact drove most of the engineering below: a deploy
+      freeze during live windows, load-shedding controls that need no deploy, per-uploader
+      admission budgets, kill switches, and crash-loop auto-rollback on the desktop client.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Scale</h2>
+    <div class="h2sub rv">Measured, not estimated.</div>
+    <div class="stats">
+      <div class="stat rv"><div class="n" data-count="624">0</div><div class="l">combat encounters parsed &amp; reconciled</div></div>
+      <div class="stat rv"><div class="n" data-count="282" data-suffix="M">0</div><div class="l">damage events attributed</div></div>
+      <div class="stat rv"><div class="n" data-count="557508">0</div><div class="l">time-series snapshots stored</div></div>
+      <div class="stat rv"><div class="n" data-count="111927">0</div><div class="l">roster observations indexed</div></div>
+      <div class="stat rv"><div class="n" data-count="3485">0</div><div class="l">client uploads merged</div></div>
+      <div class="stat rv"><div class="n" data-count="21">0</div><div class="l">concurrent client reporters, peak</div></div>
+    </div>
+    <p class="rv muted" style="margin-top:18px;font-size:13.5px">
+      Multiple independent clients observe the same event and upload overlapping, partially
+      contradictory records. Reconciling them into one authoritative row — without double-counting
+      and without losing the observer who saw the most — is the core data problem the platform
+      solves.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Components</h2>
+    <div class="h2sub rv">Each one ships independently.</div>
+    <div class="grid2">
+      <div class="card rv">
+        <h3>Ingest &amp; orchestration service</h3>
+        <div class="role">Node.js · Discord API · Railway</div>
+        <p>
+          Bearer-authenticated HTTP ingest across ~20 endpoints plus ~83 user-facing commands.
+          Handles deduplication, merge-on-conflict, background schedulers, and timezone-aware
+          nightly jobs. Discord doubles as a durable store: state is reconstructed from posted
+          messages on boot, because the host filesystem is ephemeral.
+        </p>
+        <div class="meta">~17k lines · deploy-on-push</div>
+      </div>
+      <div class="card rv">
+        <h3>Telemetry agent</h3>
+        <div class="role">Node.js · zero npm dependencies</div>
+        <p>
+          Tails append-only logs that grow into the gigabytes, filters at byte level <em>before</em>
+          parsing so private content never leaves the machine, and ships batches through a durable
+          on-disk queue with exponential backoff. Serves its own localhost dashboard. Runs on
+          machines I cannot access, debug, or update on demand.
+        </p>
+        <div class="meta">~33k lines · zero dependencies by design</div>
+      </div>
+      <div class="card rv">
+        <h3>Desktop client</h3>
+        <div class="role">Electron · auto-update · Windows + Linux</div>
+        <p>
+          Bundles the agent and its own runtime. Frameless, transparent, click-through overlays
+          composited over a fullscreen application, driven by a named-pipe bridge to a third-party
+          game modification. Three release channels, delta auto-updates, and automatic rollback to
+          last-known-good after a crash loop.
+        </p>
+        <div class="meta">~8k lines in the main process</div>
+      </div>
+      <div class="card rv">
+        <h3>Web application</h3>
+        <div class="role">Next.js 14 · App Router · Vercel</div>
+        <p>
+          OAuth sign-in with a two-stage authorization gate, role-gated admin surfaces, server
+          actions with optimistic UI, and a public marketing/story front end. Row-level security in
+          Postgres so the browser client can never read what the viewer is not entitled to.
+        </p>
+        <div class="meta">Production + addressable preview environment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Selected problems</h2>
+    <div class="h2sub rv">Each of these was found by measuring, not by guessing.</div>
+
+    <div class="case rv">
+      <h3>A page that took 32 seconds to render six numbers</h3>
+      <p>
+        The public stats page issued nine <code>count()</code> queries plus three full scans that
+        pulled 200k rows into the app to deduplicate in JavaScript. Folding it into a single
+        database function of exact counts was <em>still</em> 32 seconds, because exact counts are
+        full scans on million-row tables.
+      </p>
+      <p>
+        The fix was changing <em>what was asked</em>, not how: planner row estimates for
+        display-only counts where the last three digits are worthless, and reading headline
+        aggregates from the small authoritative table instead of the large derived one.
+      </p>
+      <div class="result"><span class="was">32,398 ms</span> <span>→ ~200 ms</span></div>
+    </div>
+
+    <div class="case amber rv">
+      <h3>A join that silently matched 2.6% of the time</h3>
+      <p>
+        Time-series snapshots were supposed to bind to the encounter they belonged to. Only 96 of
+        3,651 did. Two independent causes, both invisible because the query returned rows either
+        way: the read side compared identifiers in two different formats, and the write side only
+        ever claimed the submitting client's own rows, inside a window narrower than the clock skew
+        between machines.
+      </p>
+      <p>
+        I measured the actual skew across real client machines — 22 to 56 seconds, with one drifting
+        past 67 — and sized the matching window from the measurement instead of the guess.
+      </p>
+      <div class="result"><span class="was">2.6% bound</span> <span>→ full coverage</span></div>
+    </div>
+
+    <div class="case purple rv">
+      <h3>A pattern compiler that ate its own input</h3>
+      <p>
+        Users author matching rules in a small DSL with placeholder tokens. A token intended to
+        capture a name compiled to a non-greedy wildcard, which happily matched the timestamp
+        prefix instead — so rules looked correct, were enabled, and silently never fired. An
+        anchor-rewriting pass now makes user-written anchors mean what users think they mean.
+      </p>
+      <p>
+        It shipped through ten releases undetected because the branch it lived on carried 35 test
+        files while the main branch carried 90. Re-syncing that gap is now part of the release
+        checklist — <strong style="color:var(--text)">the defect was a process failure that happened
+        to express itself as a regex bug.</strong>
+      </p>
+      <div class="result"><span>caught by restoring 55 missing test files</span></div>
+    </div>
+
+    <div class="case red rv">
+      <h3>Verifying against the source instead of trusting a plausible answer</h3>
+      <p>
+        A feature needed the exact text a server emits on a rare event. The obvious answer — from
+        documentation, forums, and an AI assistant — supplied two strings. One was real. The other
+        described an event the server never emits at all, and had already been implemented once
+        from a guess, sitting enabled and matching nothing for weeks.
+      </p>
+      <p>
+        Reading the server's actual source settled it in minutes and produced three facts no
+        secondary source had: the message is name-form even for the affected user, it is
+        range-limited so distant clients never see it, and the failure case is silent by design.
+      </p>
+      <div class="result"><span>enabled-but-dead rules found and corrected</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">How it is operated</h2>
+    <div class="h2sub rv">Running it is most of the job.</div>
+    <div class="grid2">
+      <div class="card rv">
+        <h3>Controls that need no deploy</h3>
+        <p>
+          Per-stream load shedding, per-client admission budgets, and a fleet-wide pause are all
+          configuration read on a 60-second cache. Durable streams are structurally exempt — the
+          code refuses to shed them even if the flag is set, so nobody can switch off the data
+          collection by mistake.
+        </p>
+      </div>
+      <div class="card rv">
+        <h3>Deploy discipline</h3>
+        <p>
+          Pushing to production restarts everything users depend on, so deploys are frozen during
+          live windows and enforced by CI. Desktop updates are pull-based and therefore always
+          safe; server changes wait.
+        </p>
+      </div>
+      <div class="card rv">
+        <h3>Failure containment</h3>
+        <p>
+          Request timeouts and a consecutive-failure circuit breaker around the database, a durable
+          client-side queue so an outage costs latency rather than data, and post-acknowledgement
+          deferral of anything presentational so clients never wait on a third-party API.
+        </p>
+      </div>
+      <div class="card rv">
+        <h3>Written-down decisions</h3>
+        <p>
+          Every judgement call lands in a dated decision log with the reasoning and where it took
+          effect. Work happens across machines that cannot share context, so a decision that lives
+          only in someone's head is already lost.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Pace &amp; method</h2>
+    <div class="h2sub rv">Velocity came from removing rework, not from adding hours.</div>
+    <div class="stats">
+      <div class="stat rv"><div class="n" data-count="1851">0</div><div class="l">commits across four components</div></div>
+      <div class="stat rv"><div class="n" data-count="596">0</div><div class="l">automated releases cut</div></div>
+      <div class="stat rv"><div class="n" data-count="86">0</div><div class="l">test suites gating every push</div></div>
+      <div class="stat rv"><div class="n" data-count="4">0</div><div class="l">independent release targets</div></div>
+    </div>
+
+    <p class="rv muted" style="margin-top:24px">
+      This is AI-assisted development run at a deliberate cadence, and the interesting part is not
+      the volume — it is what had to be true for the volume to be safe. Work happens in
+      <strong style="color:var(--text)">short, discontinuous sessions</strong> that cannot share
+      context with each other, so the repository carries the memory instead of my head: a dated
+      decision log, a feature-to-file index read before anyone concludes something does not exist,
+      and a status ledger of what is done, blocked, or deliberately abandoned. A session can end
+      mid-thought without losing the thread, which is the whole reason this compounds instead of
+      stalling.
+    </p>
+    <p class="rv muted">
+      Speed with no gate is just faster breakage, so the gates came first: 86 test suites,
+      golden-file regression over recorded real-world input, a dedicated checker for a template
+      that had shipped a blank-page bug twice, and continuous integration on every branch that
+      ships to a user — after a release once slipped through on a branch that quietly had 55 fewer
+      test files than the one it was cut from.
+    </p>
+    <p class="rv muted">
+      The same skepticism applies to the assistance itself. Generated answers are treated as
+      hypotheses: the case above — where documentation, forums and an assistant all supplied a
+      string the server never emits — is exactly why the habit is to verify against source,
+      schema, or a live measurement before shipping. <strong style="color:var(--text)">Knowing
+      which claims must be checked is the skill that makes the rest of it usable.</strong>
+    </p>
+    <p class="rv muted">
+      Operationally it is built to run without a person watching it. Releases are automated per
+      channel, client updates are pull-based, and the runtime controls — load shedding, per-client
+      budgets, a fleet-wide pause — are configuration read on a short cache rather than a deploy.
+      When something needs attention during a live window, the response is a settings change, not
+      an emergency.
+    </p>
+    <p class="rv" style="margin-top:6px">
+      <a href="/method.html">The full working method — memory as files, two-tier retrieval, the
+      audits that paid off →</a>
+    </p>
+
+    <div class="todo rv" style="margin-top:22px">
+      <h3>Optional: exact assistant usage</h3>
+      <p>
+        The commit, release and test figures above are counted from the repository. A precise
+        token/spend figure is not something the repo records — if you want one here, pull it from
+        the Anthropic Console usage page and I will drop the real number in. I would rather show
+        no figure than an estimated one.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Stack</h2>
+    <div class="h2sub rv">Chosen for operability, not novelty.</div>
+    <div class="rv">
+      <div class="stackrow"><span class="k">Languages</span><span class="v">JavaScript (Node.js), TypeScript, SQL, PowerShell</span></div>
+      <div class="stackrow"><span class="k">Backend</span><span class="v">Node.js HTTP services, Discord API, REST ingest, background schedulers</span></div>
+      <div class="stackrow"><span class="k">Frontend</span><span class="v">Next.js 14 App Router, React server components, server actions, Tailwind</span></div>
+      <div class="stackrow"><span class="k">Desktop</span><span class="v">Electron, IPC bridges with context isolation, native named pipes, electron-updater</span></div>
+      <div class="stackrow"><span class="k">Data</span><span class="v">PostgreSQL, row-level security, SQL functions, migrations, materialized reporting</span></div>
+      <div class="stackrow"><span class="k">Infra</span><span class="v">Vercel, Railway, GitHub Actions, multi-channel release automation</span></div>
+      <div class="stackrow"><span class="k">Testing</span><span class="v">Vitest — 86 suites; golden-file regression over recorded real-world input</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">To fill in</h2>
+    <div class="h2sub rv">These need you — I will not invent them.</div>
+    <div class="todo rv">
+      <h3>Placeholders left deliberately blank</h3>
+      <p>Everything above is drawn from the codebase and the production database, so it is all verifiable. These are not:</p>
+      <ul>
+        <li><strong>Headline title</strong> — e.g. "Software Engineer" / "Platform Engineer", or a one-line positioning statement of your choosing.</li>
+        <li><strong>Contact</strong> — email, GitHub, LinkedIn, or a contact form.</li>
+        <li><strong>Employment history</strong> — roles, companies, dates.</li>
+        <li><strong>Education / certifications</strong>, if you want them.</li>
+        <li><strong>Whether to name the project</strong> — it is described generically here. Naming it, linking it, or screenshotting the UI are all reasonable; that is your call, not mine.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Every figure on this page is measured from the running system, not estimated.
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rv = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+
+  function fmt(n){ return n.toLocaleString('en-US'); }
+
+  // Count-up for the stat strip. Runs once per element, then unobserves.
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (!isFinite(target)) return;
+    if (reduce){ el.textContent = fmt(target) + suffix; return; }
+    var dur = 1100, start = null;
+    function step(ts){
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 4);            // easeOutQuart
+      el.textContent = fmt(Math.round(target * eased)) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (reduce || !('IntersectionObserver' in window)){
+    rv.forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(countUp);
+    return;
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      el.classList.add('in');
+      var n = el.querySelector('[data-count]');
+      if (n) countUp(n);
+      io.unobserve(el);                               // reveal once, never re-run
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+
+  rv.forEach(function(el, i){
+    el.style.transitionDelay = Math.min(i % 6, 5) * 45 + 'ms';
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

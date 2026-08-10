@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dave Hess — Hesstastic</title>
+<meta name="description" content="Engineering profile, working method, and the business case for one AI-assisted seat — three reference documents on a four-component real-time platform built and operated solo.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Dave Hess — Hesstastic">
+<meta property="og:description" content="A four-component real-time platform built solo. Three reference documents: the profile, the method, and what one seat returns.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="site">
+  <div class="wrap">
+    <a href="/" class="here">Home</a>
+    <a href="/profile.html">Profile</a>
+    <a href="/method.html">Working method</a>
+    <a href="/business-case.html">What a seat returns</a>
+    <a href="/ws1home.html">WS1</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow rv">Hesstastic</div>
+    <h1 class="rv">Dave&nbsp;Hess</h1>
+    <p class="lede rv">
+      I build and operate <strong>a four-component real-time platform</strong> — a Discord bot, a
+      Next.js web app, a zero-dependency log-parsing agent, and an auto-updating Electron desktop
+      client — as one monorepo, solo, for a live user base that depends on it during scheduled
+      four-hour events three nights a week.
+    </p>
+    <div class="chips rv">
+      <span class="chip">Node.js</span>
+      <span class="chip">Next.js 14</span>
+      <span class="chip">Electron</span>
+      <span class="chip">PostgreSQL / Supabase</span>
+      <span class="chip">Real-time ingest</span>
+      <span class="chip">Release engineering</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Start here</h2>
+    <div class="h2sub rv">Three documents. Pick the one that matches why you came.</div>
+    <div class="grid2">
+
+      <a class="card rv" href="/profile.html">
+        <h3>Engineering profile</h3>
+        <div class="role">What was built · ~10 min</div>
+        <p>
+          The system, its four components and four release cadences, the scale it runs at, and four
+          worked problems — a 32-second page, a join that silently matched 2.6% of the time, a
+          pattern compiler that ate its own input, and a plausible answer that turned out to be
+          fiction.
+        </p>
+        <div class="go">Read the profile →</div>
+      </a>
+
+      <a class="card rv" href="/method.html">
+        <h3>Working method</h3>
+        <div class="role">How it is built · ~12 min</div>
+        <p>
+          Spending less by re-deriving less: memory kept as files rather than conversations,
+          retrieval split across two tiers, rules written after paying for their absence, and eight
+          audits that each found a real defect in something that looked healthy from the outside.
+        </p>
+        <div class="go">Read the method →</div>
+      </a>
+
+      <a class="card rv" href="/business-case.html">
+        <h3>What one seat returns</h3>
+        <div class="role">For a budget owner · ~8 min</div>
+        <p>
+          The spend, measured rather than argued: metered-equivalent consumption at list rates, a
+          5.9× gap against the same work run without caching discipline, deliberate model routing,
+          and the objections answered in the order they usually arrive.
+        </p>
+        <div class="go">Read the business case →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">At a glance</h2>
+    <div class="h2sub rv">Counted from the repository, not estimated.</div>
+    <div class="stats">
+      <div class="stat rv"><div class="n" data-count="1851">0</div><div class="l">commits across four components</div></div>
+      <div class="stat rv"><div class="n" data-count="596">0</div><div class="l">automated releases cut</div></div>
+      <div class="stat rv"><div class="n" data-count="86">0</div><div class="l">test suites gating every push</div></div>
+      <div class="stat rv"><div class="n" data-count="4">0</div><div class="l">independent release targets</div></div>
+    </div>
+    <p class="rv muted" style="margin-top:18px;font-size:13.5px">
+      Every figure across these pages is drawn from the git repository, the production database, or
+      the assistant's own usage records. Each page says which, and the numbers are floors rather
+      than best cases — where two measurement windows could be conflated to make something look
+      better, they are listed separately instead.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Also here</h2>
+    <div class="h2sub rv">Not everything on this domain is a reference document.</div>
+    <div class="grid2">
+      <a class="card rv" href="/ws1home.html">
+        <h3>WS1</h3>
+        <div class="role">The original page · ~1 min</div>
+        <p>
+          What lived at this address before the rest of it did. It has been left exactly as it was.
+          It autoplays. You have been warned.
+        </p>
+        <div class="go">Proceed anyway →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Every figure on these pages is measured from the running system, not estimated.
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rv = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+
+  function fmt(n){ return n.toLocaleString('en-US'); }
+
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (!isFinite(target)) return;
+    if (reduce){ el.textContent = fmt(target); return; }
+    var dur = 1100, start = null;
+    function step(ts){
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 4))));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (reduce || !('IntersectionObserver' in window)){
+    rv.forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(countUp);
+    return;
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      var n = e.target.querySelector('[data-count]');
+      if (n) countUp(n);
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+
+  rv.forEach(function(el, i){
+    el.style.transitionDelay = Math.min(i % 6, 5) * 45 + 'ms';
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
