@@ -36,21 +36,13 @@ would 404. The custom domain is load-bearing, not decorative.
 **Settings → Pages → Build and deployment.** Source: **Deploy from a branch**.
 Branch: **`master`**, folder: **`/ (root)`**.
 
-> ### ⚠ The domain switch is deliberately not done yet
->
-> `CNAME` still contains **`mimic.hesstastic.com`**, not the apex. That is on
-> purpose. Changing it flips the Pages custom domain the moment it is pushed, and
-> until the apex `A` records exist at Porkbun the apex does not resolve — so
-> flipping it first would leave **both** hostnames dead in the gap.
->
-> **Correct order:** add the DNS records below → confirm they resolve → then
-> change `CNAME` to `hesstastic.com` and push. The site stays reachable at
-> `mimic.hesstastic.com` the whole time, which also means the new pages can be
-> previewed live before the switch.
+The `CNAME` file contains `hesstastic.com`, so the Pages custom-domain field
+populates itself from it. Do not delete that file — Pages rewrites it from the
+settings field, and an empty one drops the domain.
 
-The `CNAME` file drives the Pages custom-domain field, which populates itself
-from it. Do not delete that file — Pages rewrites it from the settings field, and
-an empty one drops the domain.
+Switching the domain was done last, after the apex `A` records resolved, because
+changing `CNAME` flips the Pages custom domain the moment it is pushed — doing it
+before DNS existed would have left both hostnames dead in the gap.
 
 `.nojekyll` disables Jekyll processing. Nothing here needs it, and it stops
 Jekyll from ignoring any future file or folder whose name begins with `_`.
