@@ -27,8 +27,9 @@
     <div class="eyebrow rv">Projects</div>
     <h1 class="rv" style="font-size:clamp(30px,5.4vw,48px)">Things that are<br>actually running</h1>
     <p class="lede rv">
-      Not prototypes. Production systems with a user base that shows up on a fixed schedule, where a
-      bad deploy is visible to everyone at once.
+      Two things with real users on them: a real-time platform whose user base all shows up at once
+      on a fixed schedule, and a party game built for a room full of people holding their own phones.
+      Different problems, same habit of shipping it and then operating it.
     </p>
   </div>
 </header>
@@ -97,6 +98,56 @@
 
 <section>
   <div class="wrap">
+    <h2 class="rv">Celebrity / Salad Bowl</h2>
+    <div class="h2sub rv">A party word game, built to be handed round a room.</div>
+    <p class="rv muted">
+      Two game modes — Celebrity, played in three rounds where the same names are described, then cut
+      down to a single word, then acted out; and Salad Bowl, the one-round variant. Teams are
+      assigned at random or drafted, turns run a minute with time carried over between rounds, and
+      game state survives a refresh rather than losing the room's progress to a stray reload.
+    </p>
+    <p class="rv muted">
+      The interesting constraint is the hardware it actually runs on: <strong
+      style="color:var(--text)">a group of people holding their own phones, in one room, with a
+      television.</strong> So there is a full-screen card view built for one-handed phone use, a
+      separate TV display mode for the shared screen, and players join by scanning a QR code rather
+      than typing a URL. It installs as a PWA, which hides the browser chrome and makes it behave
+      like a native app.
+    </p>
+    <div class="grid2" style="margin-top:20px">
+      <div class="card rv">
+        <h3>Client</h3>
+        <div class="role">React 18 · Vite · PWA</div>
+        <p>
+          Phone-first full-screen card UI, an installable service-worker build, and local persistence
+          so a refresh mid-round does not reset the game.
+        </p>
+      </div>
+      <div class="card rv">
+        <h3>Shared state</h3>
+        <div class="role">Supabase · Vercel edge functions</div>
+        <p>
+          Postgres behind the room state, with row-level security, so phones and the TV display stay
+          in agreement without one device having to act as the host.
+        </p>
+      </div>
+    </div>
+    <div class="rv">
+      <div class="stackrow" style="margin-top:22px">
+        <span class="k">Live at</span>
+        <span class="v"><a href="https://celebrity.hesstastic.com/">celebrity.hesstastic.com</a>
+          — also answers on <code>celeb</code>, <code>salad</code> and <code>saladbowl</code></span>
+      </div>
+      <div class="stackrow">
+        <span class="k">Size</span>
+        <span class="v">~7,500 lines across the client and its edge functions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2 class="rv">The writing</h2>
     <div class="h2sub rv">How it was built, and what the assistance cost.</div>
     <div class="grid2">
@@ -142,20 +193,21 @@
     <div class="todo rv">
       <h3>Not listed yet</h3>
       <p>
-        These subdomains exist in your DNS but I have not described or linked them, because I do not
-        know what they serve or whether you want them advertised — and inventing descriptions would
-        be the one thing every other page here argues against.
+        Two loose ends I have not written up, because I would be guessing:
       </p>
       <ul>
-        <li><strong>On Vercel</strong> — <code>parser</code>, <code>salad</code>,
-            <code>saladbowl</code>, <code>discord</code>, <code>celebrity</code>,
-            <code>celeb</code></li>
-        <li><strong>Parked on Porkbun defaults</strong> — <code>home</code>, <code>login</code>,
-            <code>rr</code>, <code>help</code>. These point at Porkbun's own hosts, so they are
-            probably not real sites.</li>
+        <li><code>parser</code> — described to me as <em>"a link to an installer"</em>, in the past
+            tense, so I do not know whether it is still live or which installer it served. Not linked
+            until that is settled.</li>
+        <li><code>discord</code> — on Vercel, purpose unknown.</li>
       </ul>
       <p>
-        Tell me what any of these are and I will write them up as proper cards. Delete this whole
+        <code>home</code>, <code>login</code>, <code>rr</code> and <code>help</code> point at
+        Porkbun's own parking hosts, so they are almost certainly not real sites and are left out
+        deliberately.
+      </p>
+      <p>
+        Tell me what these are and they become proper entries. Delete this whole
         <code>&lt;section&gt;</code> if you would rather they stayed unlisted.
       </p>
     </div>
