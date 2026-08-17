@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — Dave Hess</title>
+<meta name="description" content="What is running: a four-component real-time platform, and the writing about how it was built and what it cost.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Projects — Dave Hess">
+<meta property="og:description" content="A four-component real-time platform with users on a schedule — plus the documents explaining how it was built.">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="site">
+  <div class="wrap">
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/projects.html" class="here">Projects</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/ws1home.html">WS1</a>
+  </div>
+</nav>
+
+<header style="padding:72px 0 48px">
+  <div class="wrap">
+    <div class="eyebrow rv">Projects</div>
+    <h1 class="rv" style="font-size:clamp(30px,5.4vw,48px)">Things that are<br>actually running</h1>
+    <p class="lede rv">
+      Not prototypes. Production systems with a user base that shows up on a fixed schedule, where a
+      bad deploy is visible to everyone at once.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Wolfpack</h2>
+    <div class="h2sub rv">A four-component real-time platform, built and operated solo.</div>
+    <p class="rv muted">
+      Telemetry flows from software running on end-user machines, through an authenticated HTTP
+      ingest layer, into Postgres, and back out to a Discord bot, a public web app, and a set of
+      always-on-top desktop overlays that update sub-second while a user is mid-event. Four
+      components, four deployment targets, four independent release cadences — each with its own
+      version and its own rollback story.
+    </p>
+    <div class="stats">
+      <div class="stat rv"><div class="n" data-count="624">0</div><div class="l">combat encounters parsed &amp; reconciled</div></div>
+      <div class="stat rv"><div class="n" data-count="282" data-suffix="M">0</div><div class="l">damage events attributed</div></div>
+      <div class="stat rv"><div class="n" data-count="557508">0</div><div class="l">time-series snapshots stored</div></div>
+      <div class="stat rv"><div class="n" data-count="1851">0</div><div class="l">commits across four components</div></div>
+    </div>
+    <p class="rv" style="margin-top:20px">
+      <a href="https://wolfpack.quest/about">Go and look at it — wolfpack.quest →</a>
+    </p>
+
+    <div class="grid2" style="margin-top:24px">
+      <div class="card rv">
+        <h3>Ingest &amp; orchestration service</h3>
+        <div class="role">Node.js · Discord API · Railway</div>
+        <p>
+          Bearer-authenticated HTTP ingest across ~20 endpoints plus ~83 user-facing commands.
+          Deduplication, merge-on-conflict, background schedulers, timezone-aware nightly jobs.
+        </p>
+        <div class="meta">~17k lines · deploy-on-push</div>
+      </div>
+      <div class="card rv">
+        <h3>Telemetry agent</h3>
+        <div class="role">Node.js · zero npm dependencies</div>
+        <p>
+          Tails append-only logs that grow into the gigabytes, filters at byte level before parsing
+          so private content never leaves the machine, ships batches through a durable on-disk queue.
+        </p>
+        <div class="meta">~33k lines · zero dependencies by design</div>
+      </div>
+      <div class="card rv">
+        <h3>Desktop client</h3>
+        <div class="role">Electron · auto-update · Windows + Linux</div>
+        <p>
+          Frameless, transparent, click-through overlays composited over a fullscreen application.
+          Three release channels, delta auto-updates, automatic rollback after a crash loop.
+        </p>
+        <div class="meta">~8k lines in the main process</div>
+      </div>
+      <div class="card rv">
+        <h3>Web application</h3>
+        <div class="role">Next.js 14 · App Router · Vercel</div>
+        <p>
+          OAuth with a two-stage authorization gate, role-gated admin surfaces, server actions with
+          optimistic UI. Row-level security so the browser can never read what the viewer cannot see.
+        </p>
+        <div class="meta">Production + addressable preview environment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">The writing</h2>
+    <div class="h2sub rv">How it was built, and what the assistance cost.</div>
+    <div class="grid2">
+      <a class="card rv" href="/method.html">
+        <h3>Working method</h3>
+        <div class="role">~12 min</div>
+        <p>
+          Memory kept as files rather than conversations, retrieval split across two tiers, and eight
+          audits that each found a real defect in something that looked healthy from the outside.
+        </p>
+        <div class="go">Read the method →</div>
+      </a>
+      <a class="card rv" href="/business-case.html">
+        <h3>What one seat returns</h3>
+        <div class="role">~8 min</div>
+        <p>
+          The spend, measured rather than argued: metered-equivalent consumption at list rates, a
+          5.9× gap against the same work run without caching discipline, and deliberate model routing.
+        </p>
+        <div class="go">Read the business case →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">This site</h2>
+    <div class="h2sub rv">Small, but it makes a point.</div>
+    <p class="rv muted">
+      Static HTML and one stylesheet on GitHub Pages. No build step, no framework, no external
+      fonts, no CDN — nothing is fetched at render time, so there is no third party that can break
+      it. Scroll-reveal and count-up are written directly against the browser's intersection
+      observer, reduced motion is honoured, and no page scrolls sideways on a phone.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Also on this domain</h2>
+    <div class="h2sub rv">Needs your call before it goes public.</div>
+    <div class="todo rv">
+      <h3>Not listed yet</h3>
+      <p>
+        These subdomains exist in your DNS but I have not described or linked them, because I do not
+        know what they serve or whether you want them advertised — and inventing descriptions would
+        be the one thing every other page here argues against.
+      </p>
+      <ul>
+        <li><strong>On Vercel</strong> — <code>parser</code>, <code>salad</code>,
+            <code>saladbowl</code>, <code>discord</code>, <code>celebrity</code>,
+            <code>celeb</code></li>
+        <li><strong>Parked on Porkbun defaults</strong> — <code>home</code>, <code>login</code>,
+            <code>rr</code>, <code>help</code>. These point at Porkbun's own hosts, so they are
+            probably not real sites.</li>
+      </ul>
+      <p>
+        Tell me what any of these are and I will write them up as proper cards. Delete this whole
+        <code>&lt;section&gt;</code> if you would rather they stayed unlisted.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="mailto:contact@hesstastic.com">contact@hesstastic.com</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/hesstastic/">LinkedIn</a> &nbsp;·&nbsp;
+    <a href="https://wolfpack.quest/about">wolfpack.quest</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rv = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+
+  function fmt(n){ return n.toLocaleString('en-US'); }
+
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (!isFinite(target)) return;
+    if (reduce){ el.textContent = fmt(target) + suffix; return; }
+    var dur = 1100, start = null;
+    function step(ts){
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 4)))) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (reduce || !('IntersectionObserver' in window)){
+    rv.forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(countUp);
+    return;
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      var n = e.target.querySelector('[data-count]');
+      if (n) countUp(n);
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+
+  rv.forEach(function(el, i){
+    el.style.transitionDelay = Math.min(i % 6, 5) * 45 + 'ms';
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

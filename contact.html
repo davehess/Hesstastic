@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Dave Hess</title>
+<meta name="description" content="Get in touch with Dave Hess — email or LinkedIn.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Contact — Dave Hess">
+<meta property="og:description" content="Email or LinkedIn.">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="site">
+  <div class="wrap">
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/projects.html">Projects</a>
+    <a href="/contact.html" class="here">Contact</a>
+    <a href="/ws1home.html">WS1</a>
+  </div>
+</nav>
+
+<header style="padding:72px 0 48px">
+  <div class="wrap">
+    <div class="eyebrow rv">Contact</div>
+    <h1 class="rv" style="font-size:clamp(30px,5.4vw,48px)">Get in touch</h1>
+    <p class="lede rv">
+      Two ways, both of which reach me. Email is the faster one.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Direct</h2>
+    <div class="h2sub rv">Dave Hess — Solution Engineer.</div>
+    <div class="rv">
+      <div class="stackrow">
+        <span class="k">Email</span>
+        <span class="v"><a href="mailto:contact@hesstastic.com">contact@hesstastic.com</a></span>
+      </div>
+      <div class="stackrow">
+        <span class="k">LinkedIn</span>
+        <span class="v"><a href="https://www.linkedin.com/in/hesstastic/">linkedin.com/in/hesstastic</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="rv">Before you write</h2>
+    <div class="h2sub rv">Things that are already answered.</div>
+    <div class="grid2">
+      <a class="card rv" href="/about.html">
+        <h3>What I build</h3>
+        <p>
+          The platform, its four components, the scale it runs at, and four problems worked end to
+          end — each found by measuring rather than guessing.
+        </p>
+        <div class="go">Read the profile →</div>
+      </a>
+      <a class="card rv" href="/projects.html">
+        <h3>What is live</h3>
+        <p>
+          The systems currently running, what each one does, and where you can go and look at it
+          yourself rather than taking my word for it.
+        </p>
+        <div class="go">See the projects →</div>
+      </a>
+    </div>
+    <p class="rv muted" style="margin-top:20px;font-size:13.5px">
+      Roles, dates and employment history live on LinkedIn rather than here — this site argues from
+      the work itself, which is the part that can be checked.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="mailto:contact@hesstastic.com">contact@hesstastic.com</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/hesstastic/">LinkedIn</a> &nbsp;·&nbsp;
+    <a href="https://wolfpack.quest/about">wolfpack.quest</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rv = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  if (reduce || !('IntersectionObserver' in window)){
+    rv.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+  rv.forEach(function(el, i){
+    el.style.transitionDelay = Math.min(i % 5, 4) * 45 + 'ms';
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
