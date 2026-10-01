@@ -17,6 +17,34 @@ third party that can break it.
 | `business-case.html` | `/business-case.html` | What one AI-assisted seat returns, measured |
 | `ws1home.html` | `/ws1home.html` | The page that lived here first, preserved |
 | `style.css` | — | The one stylesheet, shared by all seven pages |
+| `eqmimic/index.html` | `/eqmimic/` | eqmimic.quest, design A (demo-led). Self-contained: own styles, does not use `style.css` |
+| `eqmimic/b/index.html` | `/eqmimic/b/` | eqmimic.quest, design B (ledger-led). Self-contained |
+| `vercel.json` | — | Serves `eqmimic/` at the root of eqmimic.quest when this repo runs on Vercel. Inert on Pages |
+
+## eqmimic.quest (added 2026-10-01)
+
+The download page for Mimic in local mode: the EverQuest overlays without the
+guild server. Two designs are up for a pick; the one not picked gets deleted, and
+the picked one loses its `noindex`. Until the domain is wired they preview here:
+`hesstastic.com/eqmimic/` (A) and `hesstastic.com/eqmimic/b/` (B).
+
+**Why it sits in this repo.** A Pages site carries one custom domain, so Pages
+cannot serve eqmimic.quest from here. It can on **Vercel**: add `eqmimic.quest`
+to the Vercel project that builds this repo (Settings → Domains), and
+`vercel.json` serves `eqmimic/` at that host's root. Add `www.eqmimic.quest` as a
+redirect to the apex in the same dialog. Nothing on hesstastic.com changes:
+every route in `vercel.json` matches only the eqmimic.quest host.
+
+⚠ `vercel.json` uses `routes`, not `rewrites`, on purpose: Vercel serves a
+matching file before it applies a rewrite, so a rewrite of `/` would lose to this
+repo's own `index.html` and eqmimic.quest would show hesstastic.com. Untested
+until the domain is added: if eqmimic.quest shows this site's home page, the
+route did not apply.
+
+The download button asks GitHub for the newest Mimic installer with local mode
+(2.7.7-beta.7 or later; the newest stable once one exists) and falls back to the
+releases page if GitHub cannot be reached. That one request is the only thing
+these pages fetch.
 
 Nav carries Home / About / Projects / Contact / WS1. `method.html` and
 `business-case.html` are deliberately **not** in the nav — they are long reads

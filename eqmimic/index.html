@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mimic — overlays for EverQuest on Project Quarm</title>
+<meta name="description" content="Damage meter, triggers, timers, charm and pet trackers for EverQuest on Project Quarm. Reads your own log on your own PC. Free, Windows.">
+<!-- Variant A (demo-led). Not indexed until the guild lead picks A or B. -->
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--border:#30363d;--text:#c9d1d9;--dim:#8b949e;--faint:#6e7681;
+  --blue:#58a6ff;--gold:#d29922;--green:#56d364;--red:#f85149;--orange:#ffa657;--accent:#1f6feb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font:15px/1.55 "Cascadia Code",Consolas,ui-monospace,monospace}
+a{color:var(--blue)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.top{border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:baseline;gap:12px;padding-top:14px;padding-bottom:14px}
+.mark{font-weight:700;font-size:20px;letter-spacing:.5px;color:var(--text);text-decoration:none}
+.top .sub{color:var(--dim);font-size:13px}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding:56px 0 48px}
+h1{font-size:34px;line-height:1.2;margin:0 0 14px;font-weight:700}
+.lede{color:var(--dim);margin:0 0 26px;max-width:46ch}
+.dl{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;
+  padding:12px 20px;border-radius:6px;border:1px solid #388bfd}
+.dl:hover{background:#388bfd}
+.dlnote{color:var(--dim);font-size:13px;margin-top:10px}
+.promise{margin-top:18px;color:var(--green);font-size:13px}
+/* The one bold thing: a scene with the overlays sitting on it, as they do over the game. */
+.scene{position:relative;aspect-ratio:4/3;border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  background:radial-gradient(120% 90% at 70% 30%,#2a2f3a 0%,#151922 55%,#0b0e13 100%)}
+.ov{position:absolute;background:rgba(13,17,23,.82);border:1px solid var(--border);border-radius:6px;
+  font-size:12px;padding:8px 10px;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.ov h4{margin:0 0 6px;font-size:11px;color:var(--dim);font-weight:400;display:flex;justify-content:space-between}
+.dps{top:6%;left:5%;width:52%}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px;position:relative;padding:1px 0}
+.row .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .v{color:var(--gold)}
+.row i{position:absolute;left:0;bottom:-1px;height:2px;background:var(--blue);opacity:.7}
+.row.me .n{color:#fff}
+.tim{top:8%;right:5%;width:36%}
+.bar{position:relative;height:18px;border-radius:3px;background:#0b1f3a;overflow:hidden;margin-bottom:5px}
+.bar b{position:absolute;inset:0 auto 0 0;background:var(--blue);opacity:.55;transform-origin:left}
+.bar span{position:relative;display:flex;justify-content:space-between;padding:0 6px;line-height:18px;font-size:11px}
+.bar.charm b{width:64%;animation:drain 42s linear infinite}
+.bar.slow b{width:28%;background:var(--gold)}
+@keyframes drain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.call{bottom:7%;left:50%;transform:translateX(-50%);border-color:var(--red);color:#fff;font-size:14px;
+  font-weight:700;padding:8px 14px;white-space:nowrap}
+.call em{color:var(--red);font-style:normal}
+section{padding:40px 0;border-top:1px solid var(--border)}
+h2{font-size:20px;margin:0 0 6px}
+.h2sub{color:var(--dim);margin:0 0 22px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card b{display:block;margin-bottom:4px}
+.card p{margin:0;color:var(--dim);font-size:13px}
+.card.ok b::before{content:"✓ ";color:var(--green)}
+.card.guild b::before{content:"○ ";color:var(--orange)}
+ol.steps{margin:0;padding-left:22px}
+ol.steps li{margin:0 0 12px}
+ol.steps li span{color:var(--dim);display:block;font-size:13px}
+code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:0 5px}
+footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--dim);font-size:13px}
+footer p{margin:0 0 6px}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;padding-top:36px;gap:28px}
+  h1{font-size:27px}
+}
+@media (max-width:420px){ .ov{font-size:11px} .call{font-size:12px} }
+@media (prefers-reduced-motion:reduce){ .bar.charm b{animation:none} }
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="mark" href="./">mimic</a><span class="sub">for EverQuest on Project Quarm</span>
+</div></div>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Overlays for EverQuest that run on your PC and stay there.</h1>
+      <p class="lede">A damage meter, triggers that speak, countdown timers, and charm and pet trackers,
+        all read from your own log file. Free, for Windows.</p>
+      <a class="dl" id="dl" href="https://github.com/davehess/QuarmBossTracker/releases">Download for Windows</a>
+      <div class="dlnote" id="dlnote">Opens the releases page.</div>
+      <div class="promise">No account. In local mode nothing you play is uploaded anywhere.</div>
+    </div>
+
+    <div class="scene" role="img" aria-label="Example: a damage meter, two countdown timers and a callout over the game">
+      <div class="ov dps">
+        <h4><span>DPS · Corvale's pull</span><span>0:48</span></h4>
+        <div class="row"><span class="n">Aldenmar</span><span class="v">412</span><i style="width:100%"></i></div>
+        <div class="row me"><span class="n">You</span><span class="v">368</span><i style="width:89%"></i></div>
+        <div class="row"><span class="n">Brackwyn</span><span class="v">301</span><i style="width:73%"></i></div>
+        <div class="row"><span class="n">Nyssara</span><span class="v">244</span><i style="width:59%"></i></div>
+        <div class="row"><span class="n">Rethlan's pet</span><span class="v">97</span><i style="width:24%"></i></div>
+      </div>
+      <div class="ov tim">
+        <h4><span>Timers</span></h4>
+        <div class="bar charm"><b></b><span><span>Charm</span><span>0:42</span></span></div>
+        <div class="bar slow"><b></b><span><span>Slow</span><span>0:19</span></span></div>
+      </div>
+      <div class="ov call"><em>Rampage</em> on YOU</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What runs on your PC</h2>
+    <p class="h2sub">Everything here reads your log file (and Zeal, if you use it). None of it needs an account.</p>
+    <div class="grid">
+      <div class="card ok"><b>Damage and tank meter</b><p>Every fight from your own log, with pets, history and copy-to-chat.</p></div>
+      <div class="card ok"><b>Triggers that speak</b><p>Text, voice and countdowns. Import your GINA or EQLogParser triggers.</p></div>
+      <div class="card ok"><b>Spell and buff timers</b><p>The full spell list ships with Mimic, so timers know their durations.</p></div>
+      <div class="card ok"><b>Charm and pet trackers</b><p>Charm breaks, re-charm countdown and your pet's buffs.</p></div>
+      <div class="card ok"><b>Bard melody and tick timer</b><p>Your song rotation and the server tick, at a glance.</p></div>
+      <div class="card ok"><b>Zeal, set up for you</b><p>Installs and updates Zeal and its target rings.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What needs a guild server</h2>
+    <p class="h2sub">These combine what several players' Mimics see, so they need a guild running the server.
+      In local mode they say so instead of showing anything.</p>
+    <div class="grid">
+      <div class="card guild"><b>Mob Info</b><p>A mob's stats, loot and spells.</p></div>
+      <div class="card guild"><b>Raid buff queue</b><p>Who in the raid is missing what.</p></div>
+      <div class="card guild"><b>Extended target and heal chains</b><p>Everyone's targets and casts, shared live.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Get going</h2>
+    <ol class="steps">
+      <li>Download and run the installer.
+        <span>It is not code-signed, so Windows may warn you. Choose More info, then Run anyway.</span></li>
+      <li>On first launch, choose <b>Run local-only for now</b>.
+        <span>Mimic stops asking you to sign in.</span></li>
+      <li>In game, type <code>/log on</code>.
+        <span>Mimic finds your EverQuest folder and starts reading.</span></li>
+      <li>Turn on the overlays you want from the dashboard.
+        <span>Unlock them to move and size them over the game.</span></li>
+    </ol>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p>The installer is named Wolf Pack Mimic, after the Project Quarm guild that builds it. You do not need to be in the guild.</p>
+  <p>The only thing Mimic contacts on its own is GitHub, to check for updates to itself and to Zeal.</p>
+  <p>Open source, AGPL-3.0: <a href="https://github.com/davehess/QuarmBossTracker">source code</a>.
+    Not affiliated with Daybreak Game Company or the Project Quarm team.</p>
+</div></footer>
+
+<script>
+// Point the button at the newest installer that has local mode (Mimic 2.7.7-beta.7 and later): the
+// newest stable once one exists, otherwise the newest beta. Earlier 2.7.7 betas still upload, so the
+// floor includes the beta number; a stable counts as above every beta of its version. If GitHub
+// cannot be reached the button keeps its plain link to the releases page.
+(function () {
+  var MIN = [2, 7, 7, 7];
+  var a = document.getElementById('dl'), note = document.getElementById('dlnote');
+  function ver(tag) {
+    var m = /^v(\d+)\.(\d+)\.(\d+)(?:-beta\.(\d+))?$/.exec(tag || '');
+    return m ? { n: [+m[1], +m[2], +m[3], m[4] == null ? Infinity : +m[4]], beta: m[4] != null } : null;
+  }
+  function atLeast(x, y) { for (var i = 0; i < 4; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; }
+  fetch('https://api.github.com/repos/davehess/QuarmBossTracker/releases?per_page=30')
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (list) {
+      var stable = null, beta = null;
+      (list || []).forEach(function (r) {
+        var v = ver(r.tag_name);
+        if (r.draft || !v || !atLeast(v.n, MIN)) return;
+        var exe = (r.assets || []).filter(function (x) { return /Setup-.*\.exe$/.test(x.name); })[0];
+        if (!exe) return;
+        if (!v.beta && !stable) stable = { tag: r.tag_name, exe: exe };
+        if (v.beta && !beta) beta = { tag: r.tag_name, exe: exe };
+      });
+      var pick = stable || beta;
+      if (!pick) return;
+      a.href = pick.exe.browser_download_url;
+      var mb = Math.round(pick.exe.size / 1048576);
+      note.textContent = pick.tag.replace(/^v/, 'Version ') + ' · ' + mb + ' MB'
+        + (stable ? '' : ' · beta: local mode is new and has not reached a stable release yet');
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>

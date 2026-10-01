@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mimic — overlays for EverQuest on Project Quarm</title>
+<meta name="description" content="EverQuest overlays that read your own log and never upload it. Free, Windows, for Project Quarm.">
+<!-- Variant B (ledger-led). Not indexed until the guild lead picks A or B. -->
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--border:#30363d;--text:#c9d1d9;--dim:#8b949e;
+  --blue:#58a6ff;--green:#56d364;--orange:#ffa657;--accent:#1f6feb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font:15px/1.6 "Cascadia Code",Consolas,ui-monospace,monospace}
+a{color:var(--blue)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{max-width:760px;margin:0 auto;padding:40px 16px 48px}
+h1{font-size:30px;margin:0 0 4px;letter-spacing:.5px}
+.tag{color:var(--dim);margin:0 0 26px}
+.get{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--border);
+  border-radius:8px;padding:16px;margin-bottom:34px}
+.dl{background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:10px 18px;border-radius:6px;border:1px solid #388bfd}
+.dl:hover{background:#388bfd}
+.get .note{color:var(--dim);font-size:13px}
+h2{font-size:17px;margin:34px 0 12px}
+/* The centrepiece: what works on your own PC against what needs other players. */
+.ledger{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.ledger > div{padding:14px 16px}
+.ledger > div + div{border-left:1px solid var(--border)}
+.ledger h3{margin:0 0 2px;font-size:14px}
+.ledger .why{color:var(--dim);font-size:12px;margin:0 0 10px}
+.ledger ul{list-style:none;margin:0;padding:0}
+.ledger li{padding:3px 0 3px 22px;position:relative}
+.local h3{color:var(--green)} .local li::before{content:"✓";color:var(--green);position:absolute;left:0}
+.guild h3{color:var(--orange)} .guild li::before{content:"○";color:var(--orange);position:absolute;left:0}
+.guild{background:#11151c}
+ul.plain{margin:0;padding-left:20px} ul.plain li{margin:0 0 8px}
+ol{margin:0;padding-left:22px} ol li{margin:0 0 8px}
+code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:0 5px}
+details{border-top:1px solid var(--border);padding:10px 0}
+details:last-of-type{border-bottom:1px solid var(--border)}
+summary{cursor:pointer;font-weight:700}
+details p{margin:8px 0 0;color:var(--dim)}
+footer{margin-top:40px;color:var(--dim);font-size:13px}
+footer p{margin:0 0 6px}
+@media (max-width:600px){
+  .ledger{grid-template-columns:1fr}
+  .ledger > div + div{border-left:0;border-top:1px solid var(--border)}
+  h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>mimic</h1>
+  <p class="tag">EverQuest overlays that read your log and never upload it. For Project Quarm. Free, Windows.</p>
+
+  <div class="get">
+    <a class="dl" id="dl" href="https://github.com/davehess/QuarmBossTracker/releases">Download for Windows</a>
+    <span class="note" id="dlnote">Opens the releases page.</span>
+  </div>
+
+  <div class="ledger">
+    <div class="local">
+      <h3>On your PC</h3>
+      <p class="why">Read from your own log, and Zeal if you have it.</p>
+      <ul>
+        <li>Damage and tank meter</li>
+        <li>Triggers with voice and countdowns</li>
+        <li>GINA and EQLogParser trigger import</li>
+        <li>Spell and buff timers</li>
+        <li>Charm and pet trackers</li>
+        <li>Bard melody, tick timer, HUD</li>
+        <li>Zeal install, updates, target rings</li>
+      </ul>
+    </div>
+    <div class="guild">
+      <h3>Needs a guild server</h3>
+      <p class="why">Combines what several players see. In local mode these say so.</p>
+      <ul>
+        <li>Mob Info stats, loot and spells</li>
+        <li>Raid buff queue</li>
+        <li>Extended target</li>
+        <li>Heal chains</li>
+        <li>Raid parses on a website</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Privacy, exactly</h2>
+  <ul class="plain">
+    <li><b>Reads:</b> your EverQuest log file, and Zeal's data if Zeal is running.</li>
+    <li><b>Sends:</b> nothing. In local mode no fight, chat or character leaves your PC.</li>
+    <li><b>Contacts:</b> GitHub, to check for updates to Mimic and to Zeal. Nothing else on its own.</li>
+  </ul>
+
+  <h2>Setup</h2>
+  <ol>
+    <li>Run the installer. It is not code-signed, so Windows may warn: More info, then Run anyway.</li>
+    <li>On first launch choose <b>Run local-only for now</b>.</li>
+    <li>In game, type <code>/log on</code>.</li>
+    <li>Turn overlays on from the dashboard, then unlock them to place them.</li>
+  </ol>
+
+  <h2>Questions</h2>
+  <details><summary>Why is the installer called Wolf Pack Mimic?</summary>
+    <p>Wolf Pack is the Project Quarm guild that builds it. You do not need to be in the guild to use it.</p></details>
+  <details><summary>Do I need Zeal?</summary>
+    <p>No. Everything that reads the log works without it. Zeal adds live HP, the tick timer and target
+      details, and Mimic can install it for you.</p></details>
+  <details><summary>I am in Wolf Pack. What changes?</summary>
+    <p>Sign in from Settings and the guild features turn on.</p></details>
+
+  <footer>
+    <p>Open source, AGPL-3.0: <a href="https://github.com/davehess/QuarmBossTracker">source code</a>.</p>
+    <p>Not affiliated with Daybreak Game Company or the Project Quarm team.</p>
+  </footer>
+</main>
+
+<script>
+// Point the button at the newest installer that has local mode (Mimic 2.7.7-beta.7 and later): the
+// newest stable once one exists, otherwise the newest beta. Earlier 2.7.7 betas still upload, so the
+// floor includes the beta number; a stable counts as above every beta of its version. If GitHub
+// cannot be reached the button keeps its plain link to the releases page.
+(function () {
+  var MIN = [2, 7, 7, 7];
+  var a = document.getElementById('dl'), note = document.getElementById('dlnote');
+  function ver(tag) {
+    var m = /^v(\d+)\.(\d+)\.(\d+)(?:-beta\.(\d+))?$/.exec(tag || '');
+    return m ? { n: [+m[1], +m[2], +m[3], m[4] == null ? Infinity : +m[4]], beta: m[4] != null } : null;
+  }
+  function atLeast(x, y) { for (var i = 0; i < 4; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; }
+  fetch('https://api.github.com/repos/davehess/QuarmBossTracker/releases?per_page=30')
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (list) {
+      var stable = null, beta = null;
+      (list || []).forEach(function (r) {
+        var v = ver(r.tag_name);
+        if (r.draft || !v || !atLeast(v.n, MIN)) return;
+        var exe = (r.assets || []).filter(function (x) { return /Setup-.*\.exe$/.test(x.name); })[0];
+        if (!exe) return;
+        if (!v.beta && !stable) stable = { tag: r.tag_name, exe: exe };
+        if (v.beta && !beta) beta = { tag: r.tag_name, exe: exe };
+      });
+      var pick = stable || beta;
+      if (!pick) return;
+      a.href = pick.exe.browser_download_url;
+      var mb = Math.round(pick.exe.size / 1048576);
+      note.textContent = pick.tag.replace(/^v/, 'Version ') + ' · ' + mb + ' MB'
+        + (stable ? '' : ' · beta: local mode is new and has not reached a stable release yet');
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>

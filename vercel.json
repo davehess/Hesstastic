@@ -1,0 +1,7 @@
+{
+  "routes": [
+    { "src": "/", "has": [{ "type": "host", "value": "eqmimic.quest" }], "dest": "/eqmimic/index.html" },
+    { "src": "/b/?", "has": [{ "type": "host", "value": "eqmimic.quest" }], "dest": "/eqmimic/b/index.html" },
+    { "src": "/(.*)", "has": [{ "type": "host", "value": "eqmimic.quest" }], "dest": "/eqmimic/$1" }
+  ]
+}
