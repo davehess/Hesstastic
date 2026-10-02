@@ -19,8 +19,10 @@ a{color:var(--blue)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 .top{border-bottom:1px solid var(--border)}
-.top .wrap{display:flex;align-items:baseline;gap:12px;padding-top:14px;padding-bottom:14px}
-.mark{font-weight:700;font-size:20px;letter-spacing:.5px;color:var(--text);text-decoration:none}
+.top .wrap{display:flex;align-items:center;gap:12px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:.5px;color:var(--text);text-decoration:none}
+.mark img{width:36px;height:36px;border-radius:8px}
+.top .demo{margin-left:auto;font-size:13px}
 .top .sub{color:var(--dim);font-size:13px}
 .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding:56px 0 48px}
 h1{font-size:34px;line-height:1.2;margin:0 0 14px;font-weight:700}
@@ -78,7 +80,8 @@ footer p{margin:0 0 6px}
 <body>
 
 <div class="top"><div class="wrap">
-  <a class="mark" href="./">mimic</a><span class="sub">for EverQuest on Project Quarm</span>
+  <a class="mark" href="./"><img src="mimic-logo.png" alt="">mimic</a><span class="sub">for EverQuest on Project Quarm</span>
+  <a class="demo" href="demo/">See it with sample data →</a>
 </div></div>
 
 <main class="wrap">

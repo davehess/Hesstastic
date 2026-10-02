@@ -19,7 +19,11 @@ third party that can break it.
 | `style.css` | — | The one stylesheet, shared by all seven pages |
 | `eqmimic/index.html` | `/eqmimic/` | eqmimic.quest, design A (demo-led). Self-contained: own styles, does not use `style.css` |
 | `eqmimic/b/index.html` | `/eqmimic/b/` | eqmimic.quest, design B (ledger-led). Self-contained |
-| `vercel.json` | — | Serves `eqmimic/` at the root of eqmimic.quest when this repo runs on Vercel. Inert on Pages |
+| `eqmimic/demo/index.html` | `/eqmimic/demo/` | The demo with sample data, layout A: a guided tour of one raid night |
+| `eqmimic/demo/b/index.html` | `/eqmimic/demo/b/` | The demo, layout B: an app to click around (overlays, control panel, guild and officer pages) |
+| `eqmimic/demo/{demo.css,panels.js,data.js}` | — | Shared by both demo layouts. `data.js` is generated, see below |
+| `eqmimic/mimic-logo.png` | — | The wolf Mimic logo, used by every eqmimic page |
+| `vercel.json` | — | Serves `eqmimic/` at the root of eqmimic.quest **if** this repo is ever built by Vercel. Inert on Pages |
 
 ## eqmimic.quest (added 2026-10-01)
 
@@ -28,12 +32,22 @@ guild server. Two designs are up for a pick; the one not picked gets deleted, an
 the picked one loses its `noindex`. Until the domain is wired they preview here:
 `hesstastic.com/eqmimic/` (A) and `hesstastic.com/eqmimic/b/` (B).
 
-**Why it sits in this repo.** A Pages site carries one custom domain, so Pages
-cannot serve eqmimic.quest from here. It can on **Vercel**: add `eqmimic.quest`
-to the Vercel project that builds this repo (Settings → Domains), and
-`vercel.json` serves `eqmimic/` at that host's root. Add `www.eqmimic.quest` as a
-redirect to the apex in the same dialog. Nothing on hesstastic.com changes:
-every route in `vercel.json` matches only the eqmimic.quest host.
+**Getting eqmimic.quest live (corrected 2026-10-02).** This repo is built by
+**GitHub Pages only**: every deployment on it is `github-pages`, and no Vercel
+project builds it (the first version of this note assumed one did). A Pages site
+carries one custom domain, and this one carries hesstastic.com, so eqmimic.quest
+needs one of:
+- **A Vercel project for this repo.** Import the repo in Vercel (framework:
+  Other, no build step), then add `eqmimic.quest` under Settings → Domains, with
+  `www.eqmimic.quest` as a redirect to the apex, and point the registrar's DNS at
+  Vercel. `vercel.json` then serves `eqmimic/` at that host's root. Nothing on
+  hesstastic.com changes: every route in `vercel.json` matches only that host.
+- **Or a second Pages site.** A new repo holding the contents of `eqmimic/` at
+  its root, Pages on, a `CNAME` file reading `eqmimic.quest`, and the registrar's
+  DNS pointed at GitHub Pages. No Vercel at all.
+
+On 2026-10-02 eqmimic.quest resolved to the registrar's parking address and
+failed TLS, so neither is in place yet.
 
 ⚠ `vercel.json` uses `routes`, not `rewrites`, on purpose: Vercel serves a
 matching file before it applies a rewrite, so a rewrite of `/` would lose to this
@@ -45,6 +59,22 @@ The download button asks GitHub for the newest Mimic installer with local mode
 (2.7.7-beta.7 or later; the newest stable once one exists) and falls back to the
 releases page if GitHub cannot be reached. That one request is the only thing
 these pages fetch.
+
+### The demo (added 2026-10-02)
+
+What a raid night looks like with Mimic, with sample data: the overlays replaying
+a real fight, Mimic's control panel, and the guild-site and officer pages a guild
+gets if it runs the server. Two layouts over the same screens, up for a pick: a
+tour (`demo/`) and an app to click around (`demo/b/`). Both pages link to them.
+
+`data.js` comes from one real raid night of the guild that built Mimic: damage
+per raider, the bosses' stats, attendance and the night's drops. **Every character
+name is replaced** by an invented one (checked against every name that guild and
+its `/who` history knows, and the server's NPC names), the guild is renamed
+Lantern Watch, dates move back eight weeks, and ranks, DKP and Mimic versions are
+made up. No `/who` data is used. The real-to-invented mapping is random and never
+saved. `tools/build-data.cjs` builds it from a private export (not in this repo)
+and refuses to write if any real name survives.
 
 Nav carries Home / About / Projects / Contact / WS1. `method.html` and
 `business-case.html` are deliberately **not** in the nav — they are long reads

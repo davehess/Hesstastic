@@ -1,0 +1,110 @@
+/* Shared by both demo layouts (index.html = the tour, b/index.html = the sandbox). The platform's
+   own tokens and monospace type, so the demo looks like the product it shows. */
+:root{
+  --bg:#0d1117;--panel:#161b22;--border:#30363d;--text:#c9d1d9;--dim:#8b949e;--faint:#6e7681;
+  --blue:#58a6ff;--gold:#d29922;--green:#56d364;--red:#f85149;--orange:#ffa657;--purple:#a371f7;--accent:#1f6feb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font:14px/1.5 "Cascadia Code",Consolas,ui-monospace,monospace}
+a{color:var(--blue)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit}
+h1,h2,h3{margin:0}
+.dim{color:var(--dim)} .faint{color:var(--faint)} .gold{color:var(--gold)} .green{color:var(--green)}
+.red{color:var(--red)} .blue{color:var(--blue)} .orange{color:var(--orange)} .purple{color:var(--purple)}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+
+/* Top bar */
+.topbar{border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:20}
+.topbar .in{display:flex;align-items:center;gap:12px;padding:10px 16px;max-width:1180px;margin:0 auto;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.brand img{width:34px;height:34px;border-radius:7px}
+.brand b{font-size:18px;letter-spacing:.5px}
+.pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid}
+.pill.demo{color:var(--purple);border-color:rgba(163,113,247,.6);background:rgba(163,113,247,.12)}
+.topbar .links{margin-left:auto;display:flex;gap:14px;font-size:13px;flex-wrap:wrap}
+
+/* Panels and tables */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px;min-width:0}
+.panel h3{font-size:14px;margin-bottom:2px}
+.panel .sub{color:var(--dim);font-size:12px;margin:0 0 10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{color:var(--dim);font-weight:400;font-size:11px;text-align:left;padding:4px 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td{padding:5px 8px;border-bottom:1px solid rgba(48,54,61,.6);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.click{cursor:pointer} .tbl tr.click:hover td{background:rgba(88,166,255,.06)}
+.tbl tr.you td{background:rgba(210,153,34,.08)}
+.cls{display:inline-block;min-width:32px;color:var(--faint);font-size:11px}
+.chip{display:inline-block;font-size:11px;padding:0 6px;border-radius:4px;border:1px solid var(--border);color:var(--dim);white-space:nowrap;margin:1px 2px 1px 0}
+.chip.gold{border-color:rgba(210,153,34,.6);color:var(--gold)} .chip.green{border-color:rgba(86,211,100,.55);color:var(--green)}
+.chip.blue{border-color:rgba(88,166,255,.55);color:var(--blue)} .chip.red{border-color:rgba(248,81,73,.55);color:var(--red)}
+.chip.purple{border-color:rgba(163,113,247,.55);color:var(--purple)} .chip.orange{border-color:rgba(255,166,87,.55);color:var(--orange)}
+.share{position:relative;height:6px;background:#0b1f3a;border-radius:3px;min-width:60px}
+.share i{position:absolute;inset:0 auto 0 0;background:var(--blue);border-radius:3px;opacity:.8}
+.toggle{width:30px;height:16px;border-radius:999px;border:1px solid var(--border);background:#0b0e13;position:relative;cursor:pointer;padding:0;vertical-align:middle}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--faint);transition:left .15s}
+.toggle[aria-pressed="true"]{border-color:rgba(86,211,100,.6);background:rgba(86,211,100,.15)}
+.toggle[aria-pressed="true"]::after{left:16px;background:var(--green)}
+code{background:#0b0e13;border:1px solid var(--border);border-radius:4px;padding:0 5px;font-size:12px;word-break:break-word}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:-4px 0 12px;flex-wrap:wrap}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--dim);padding:6px 10px;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--gold)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--dim)} .kv dd{margin:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.stat{background:#0b0e13;border:1px solid var(--border);border-radius:6px;padding:8px 10px}
+.stat b{display:block;font-size:18px} .stat span{color:var(--dim);font-size:11px}
+select{background:#0b0e13;color:var(--text);border:1px solid var(--border);border-radius:4px;padding:3px 6px;font:inherit;font-size:13px}
+
+/* The overlay scene: overlays over a stand-in for the game, the way they sit in a raid. */
+.scene{position:relative;aspect-ratio:16/9;min-height:360px;border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  background:radial-gradient(120% 90% at 65% 35%,#2b2a24 0%,#17191f 55%,#0b0e13 100%)}
+.scene::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.015) 0 2px,transparent 2px 9px)}
+.ov{position:absolute;background:rgba(13,17,23,.84);border:1px solid var(--border);border-radius:6px;padding:7px 9px;
+  font-size:12px;box-shadow:0 2px 12px rgba(0,0,0,.55)}
+.ov h4{margin:0 0 5px;font-size:11px;color:var(--dim);font-weight:400;display:flex;justify-content:space-between;gap:8px}
+.ov .mv{color:var(--faint);margin-right:4px}
+.dpsov{top:5%;left:3%;width:min(44%,330px)}
+.dpsrow{display:grid;grid-template-columns:18px 1fr auto;gap:6px;position:relative;padding:1px 0}
+.dpsrow .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dpsrow .v{color:var(--gold)}
+.dpsrow i{position:absolute;left:24px;right:0;bottom:-1px;height:2px;background:var(--blue);opacity:.65;transform-origin:left}
+.dpsrow.me .n{color:#fff} .dpsrow.me i{background:var(--gold)}
+.timov{top:5%;right:3%;width:min(36%,270px)}
+.tbar{position:relative;height:19px;border-radius:3px;background:#0b1f3a;overflow:hidden;margin-bottom:4px}
+.tbar b{position:absolute;inset:0 auto 0 0;background:var(--blue);opacity:.55}
+.tbar.gold b{background:var(--gold)} .tbar.red b{background:var(--red)} .tbar.purple b{background:var(--purple)}
+.tbar span{position:relative;display:flex;justify-content:space-between;padding:0 6px;line-height:19px;font-size:11px;gap:6px}
+.tbar span em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tgtov{right:3%;bottom:6%;width:min(40%,300px)}
+.hp{height:10px;border-radius:3px;background:#2a0d0d;overflow:hidden;margin:4px 0}
+.hp b{display:block;height:100%;background:var(--red)}
+.callout{position:absolute;left:50%;bottom:36%;transform:translateX(-50%);text-align:center;font-weight:700;font-size:20px;
+  color:#fff;text-shadow:0 0 8px #000,0 0 18px rgba(248,81,73,.85);white-space:nowrap;opacity:0;transition:opacity .25s}
+.callout.on{opacity:1}
+.callout.warn{text-shadow:0 0 8px #000,0 0 18px rgba(210,153,34,.9)}
+.scene .note{position:absolute;left:3%;bottom:4%;font-size:11px;color:var(--faint);max-width:48%}
+.replay{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+.replay button{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:2px 8px;cursor:pointer}
+
+/* Mimic's control panel (the local dashboard) */
+.mimic{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg)}
+.mimic .bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.mimic .bar img{width:22px;height:22px;border-radius:5px}
+.mimic .bar .st{margin-left:auto;font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
+.mimic .body{padding:12px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle}
+
+/* On a phone the overlays stack instead of overlapping: a preview, not a screen. */
+@media (max-width:720px){
+  .scene{aspect-ratio:auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px}
+  .scene .ov,.scene .callout{position:static;width:auto;transform:none}
+  .scene .callout{order:-1;font-size:14px;min-height:22px;white-space:normal;opacity:.25}
+  .scene .callout.on{opacity:1}
+  .scene .note{display:none}
+}
+.nw{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){ .toggle::after,.callout{transition:none} }
